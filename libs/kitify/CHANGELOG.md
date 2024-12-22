@@ -1,5 +1,12 @@
 # kitify
 
+## 0.2.0
+
+### Minor Changes 🚀
+
+- feat: Add detectMouseDirection utility and tests (#9) ([22d9dc5](https://github.com/Marinerer/jotter/commit/22d9dc583a7bb400467e450f783902f7e94e0ea7))
+- docs: Add DOM documentation for detectMouseDirection ([8b12c65](https://github.com/Marinerer/jotter/commit/8b12c652b2b25f2cf9cdd25ce8f2f3136a89501c))
+
 ## 0.1.1
 
 ### Patch Changes 🌟

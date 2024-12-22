@@ -1,6 +1,6 @@
 {
 	"name": "kitify",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "kitify is a JavaScript utility library that provides a whole mess of useful helper functions and supports modularity.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
