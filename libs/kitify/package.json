@@ -26,6 +26,12 @@
 			"module": "./dist/isType.mjs",
 			"require": "./dist/isType.js"
 		},
+		"./detectMouseDirection": {
+			"types": "./dist/detectMouseDirection.d.ts",
+			"import": "./dist/detectMouseDirection.mjs",
+			"module": "./dist/detectMouseDirection.mjs",
+			"require": "./dist/detectMouseDirection.js"
+		},
 		"./*": "./dist/*"
 	},
 	"files": [

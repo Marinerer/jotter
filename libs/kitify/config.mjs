@@ -13,6 +13,11 @@ export default {
 			input: 'src/type/isType.ts',
 			name: 'isType',
 		},
+		//==> dom
+		{
+			input: 'src/dom/detectMouseDirection.ts',
+			name: 'detectMouseDirection',
+		},
 	],
 	formats: ['cjs', 'esm', 'umd'],
 	target: ['es2015', 'es5'],
