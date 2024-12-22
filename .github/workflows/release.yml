@@ -40,15 +40,14 @@ jobs:
 
       - name: CI:test
         run: |
-          pnpm test domEmit emitter -- --coverage
-
-      - name: CI:build
-        run: pnpm build --clean
+          pnpm test domEmit emitter kitify -- --coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      ##################### 以下是执行发布流程工作
 
       # 从 package.json 中读取最后发布 commit
       - name: 📝 Get release commit from package.json 🔑
@@ -73,6 +72,10 @@ jobs:
 
           echo "Last release commit: $LAST_RELEASE"
           echo "LAST_RELEASE_COMMIT=$LAST_RELEASE" >> $GITHUB_ENV
+
+      - name: CI:build
+        if: env.LAST_RELEASE_COMMIT != env.PKG_RELEASE_COMMIT
+        run: pnpm build --clean
 
       - name: Create Release Pull Request or Publish to npm 🔐
         # 如果有新的 `release: ` 提交记录, 则执行发布
