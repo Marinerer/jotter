@@ -37,14 +37,6 @@
 	"files": [
 		"dist"
 	],
-	"buildOptions": {
-		"input": "src/index.ts",
-		"name": "kitify",
-		"target": [
-			"es2015",
-			"es5"
-		]
-	},
 	"keywords": [
 		"kitify",
 		"kit",

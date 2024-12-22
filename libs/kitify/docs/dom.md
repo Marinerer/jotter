@@ -6,7 +6,9 @@ import detectMouseDirection from 'kitify/detectMouseDirection'
 
 ## detectMouseDirection
 
-检测获取鼠标移动到指定元素的移入和移出的方向。
+Detect the direction of mouseenter and mouseleave when the mouse moves over element.
+
+检测鼠标移动到指定元素时的移入和移出方向。
 
 ```ts
 function detectMouseDirection(
@@ -15,5 +17,10 @@ function detectMouseDirection(
 	onLeave: Callback
 ): () => void
 
-// Callback = (direction: 'up' | 'down' | 'left' | 'right') => void
+/*
+Callback = (
+	direction: 'up' | 'down' | 'left' | 'right',
+	event: MouseEvent
+) => void
+*/
 ```
