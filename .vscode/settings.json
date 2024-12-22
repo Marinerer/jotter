@@ -1,6 +1,6 @@
 {
 	"npm.packageManager": "pnpm",
-	"cSpell.ignoreWords": ["cjs", "esm", "iife", "preinstall", "nocheck", "Marinerer"],
+	"cSpell.ignoreWords": ["cjs", "esm", "iife", "preinstall", "nocheck", "Marinerer", "kitify"],
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.quickSuggestions": {
