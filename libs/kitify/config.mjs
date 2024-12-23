@@ -13,6 +13,11 @@ export default {
 			input: 'src/type/isType.ts',
 			name: 'isType',
 		},
+		//==> object
+		{
+			input: 'src/object/assign.ts',
+			name: 'assign',
+		},
 		//==> dom
 		{
 			input: 'src/dom/detectMouseDirection.ts',
