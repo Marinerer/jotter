@@ -1,8 +1,0 @@
-{
-  "extends": "../../build/tsconfig.simple.json",
-  "compilerOptions": {
-    "target": "ES5",
-    "declaration": false,
-  },
-  "include": ["src"]
-}
