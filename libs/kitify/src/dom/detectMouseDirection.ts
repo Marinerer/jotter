@@ -25,7 +25,8 @@ export default function detectMouseDirection(
 		const dx = x2 - x1
 		const dy = y2 - y1
 		if (action === 'enter') {
-			// 添加 PI 来反转角度，使其对应进入方向而不是移动方向
+			//`+ Math.PI`: 添加 PI 来反转角度，使其对应进入方向而不是移动方向
+			//`% (2 * Math.PI)`: 对结果取模运算，以保角度在 0 到 2π 的范围内
 			return (Math.atan2(dy, dx) + Math.PI) % (2 * Math.PI)
 		}
 		return Math.atan2(dy, dx)
