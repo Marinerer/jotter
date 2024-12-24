@@ -4,11 +4,13 @@ export const isNumber = (value: any) => typeof value === 'number'
 export const isBoolean = (value: any) => typeof value === 'boolean'
 export const isArray = (value: any) => Array.isArray(value)
 export const isFunction = (value: any) => typeof value === 'function'
+export const isUndefined = (value: any) => value === void 0
+export const isNull = (value: any) => value === null
 export const isSymbol = (value: any) => typeof value === 'symbol'
 export const isBigInt = (value: any) => typeof value === 'bigint'
-export const isObject = (value: any) => isType(value, 'object')
+export const isObject = (value: any) => isType(value, 'object') as boolean
 
-export const isNil = (value: any) => value === null || value === undefined
+export const isNil = (value: any) => value === null || value === void 0
 
 export const isEmpty = (value: any) => {
 	if (isNil(value)) {
