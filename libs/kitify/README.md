@@ -30,26 +30,62 @@ npm install kitify
 ## Usage
 
 ```js
-import { isType, isObject, isFunction } from 'kitify'
-// or
-import { isType, isObject, isFunction } from 'kitify/type'
+import { isType, isObject } from 'kitify'
 
 isObject({}) // true
-isFunction(() => {})) // true
-isType(123) // number
+isType(123) // 'number'
 isType('hello', 'string') // true
 ```
 
 ## API
 
-### type
+### [Type](./docs/type.md)
 
-```js
-import { isType } from 'kitify/type'
+Provides some methods for interpreting data types.
 
-console.log(isType({})) // object
-console.log(isType([], 'array')) // true
-```
+一些判断数据类型的方法。
+
+| Method        | Description                                  |
+| ------------- | -------------------------------------------- |
+| `isType`      | Check if the value is of the specified type. |
+| `isObject`    | Check if the value is an object.             |
+| `isFunction`  | Check if the value is a function.            |
+| `isString`    | Check if the value is a string.              |
+| `isNumber`    | Check if the value is a number.              |
+| `isBoolean`   | Check if the value is a boolean.             |
+| `isArray`     | Check if the value is an array.              |
+| `isSymbol`    | Check if the value is a symbol.              |
+| `isUndefined` | Check if the value is undefined.             |
+| `isNull`      | Check if the value is null.                  |
+| `isBigInt`    | Check if the value is a BigInt.              |
+| `isNil`       | Check if the value is null or undefined.     |
+| `isEmpty`     | Check if the value is empty.                 |
+| `isInvalid`   | Check if the value is invalid.               |
+
+### [Object](./docs/object.md)
+
+Object related utility functions
+
+对象相关的工具函数。
+
+| Method   | Description                      |
+| -------- | -------------------------------- |
+| `assign` | Merge objects into a new object. |
+| `clone`  | Clone an object.                 |
+
+### Function
+
+### String
+
+### [DOM](./docs/dom.md)
+
+DOM related utility functions
+
+DOM元素相关工具函数。
+
+| Method                 | Description                          |
+| ---------------------- | ------------------------------------ |
+| `detectMouseDirection` | Detect the mouse movement direction. |
 
 ## License
 
