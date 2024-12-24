@@ -1,5 +1,15 @@
 # kitify
 
+## 0.3.0
+
+### Minor Changes 🚀
+
+- feat: Add isUndefined, isNull, update isObject, isNil types ([5de2dc3](https://github.com/Marinerer/jotter/commit/5de2dc39d27e8458e4c74d62171147f3f374de1c))
+- feat: Add assign utility and tests (#10) ([1dcf72a](https://github.com/Marinerer/jotter/commit/1dcf72a8b5324ae58026baea66bedba7eb872cd2))
+- docs: Enhance README, add DOM, Object, Type docs ([797a3c6](https://github.com/Marinerer/jotter/commit/797a3c62d8dd524035c391b5cb9274d0aacaace6))
+- docs: Update detectMouseDirection angle calculation comments ([b6f8ae6](https://github.com/Marinerer/jotter/commit/b6f8ae64261776bbad7ec2aca3b6060de11fe37e))
+- docs: Enhance DOM and add type docs ([64e74e3](https://github.com/Marinerer/jotter/commit/64e74e394b5e0a12d05b118cb426faca77cd8ced))
+
 ## 0.2.0
 
 ### Minor Changes 🚀
