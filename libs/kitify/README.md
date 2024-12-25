@@ -68,10 +68,13 @@ Object related utility functions
 
 对象相关的工具函数。
 
-| Method   | Description                      |
-| -------- | -------------------------------- |
-| `assign` | Merge objects into a new object. |
-| `clone`  | Clone an object.                 |
+| Method      | Description                                             |
+| ----------- | ------------------------------------------------------- |
+| `assign`    | Merge objects into a new object.                        |
+| `clone`     | Deep copy of the value.                                 |
+| `cloneDeep` | Deep copy of the value. Supports Map,Set,ArrayBuffer... |
+| `cloneLoop` | Loop deep copy of the value.                            |
+| `cloneJSON` | JSON deep copy of the value.                                   |
 
 ### Function
 

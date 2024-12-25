@@ -7,9 +7,11 @@ Object related utility functions
 ## usage
 
 ```ts
-import { assign } from 'kitify'
+import { assign, clone, cloneDeep } from 'kitify'
 
 import assign from 'kitify/assign'
+import clone from 'kitify/clone'
+import cloneDeep from 'kitify/cloneDeep'
 ```
 
 ## API
@@ -24,15 +26,28 @@ Assigns enumerable properties of source objects to the target object.
 assign(target: object, ...sources: object[]): object
 ```
 
-#### arguments
-
-| Name    | Type       | Description         |
-| ------- | ---------- | ------------------- |
-| target  | `object`   | The target object.  |
-| sources | `object[]` | The source objects. |
-
 #### example
 
 ```js
 assign({ a: 1 }, { b: 2 }, { b: 3 })
+```
+
+### clone
+
+Creates a deep copy of the value.
+
+创建一个深拷贝。
+
+```ts
+// Deep copy of the value.
+clone<T>(value: T): T;
+
+// Deep copy of the value. Supports Map,Set,ArrayBuffer...
+cloneDeep<T>(value: T): T;
+
+// Loop deep copy of the value.
+cloneLoop<T>(value: T): T;
+
+// JSON deep copy of the value.
+cloneJSON<T>(value: T): T;
 ```

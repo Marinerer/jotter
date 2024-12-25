@@ -26,6 +26,36 @@
 			"module": "./dist/isType.mjs",
 			"require": "./dist/isType.js"
 		},
+		"./assign": {
+			"types": "./dist/assign.d.ts",
+			"import": "./dist/assign.mjs",
+			"module": "./dist/assign.mjs",
+			"require": "./dist/assign.js"
+		},
+		"./clone": {
+			"types": "./dist/clone.d.ts",
+			"import": "./dist/clone.mjs",
+			"module": "./dist/clone.mjs",
+			"require": "./dist/clone.js"
+		},
+		"./cloneDeep": {
+			"types": "./dist/cloneDeep.d.ts",
+			"import": "./dist/cloneDeep.mjs",
+			"module": "./dist/cloneDeep.mjs",
+			"require": "./dist/cloneDeep.js"
+		},
+		"./cloneLoop": {
+			"types": "./dist/cloneLoop.d.ts",
+			"import": "./dist/cloneLoop.mjs",
+			"module": "./dist/cloneLoop.mjs",
+			"require": "./dist/cloneLoop.js"
+		},
+		"./cloneJSON": {
+			"types": "./dist/cloneJSON.d.ts",
+			"import": "./dist/cloneJSON.mjs",
+			"module": "./dist/cloneJSON.mjs",
+			"require": "./dist/cloneJSON.js"
+		},
 		"./detectMouseDirection": {
 			"types": "./dist/detectMouseDirection.d.ts",
 			"import": "./dist/detectMouseDirection.mjs",
@@ -35,7 +65,8 @@
 		"./*": "./dist/*"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"docs"
 	],
 	"keywords": [
 		"kitify",
