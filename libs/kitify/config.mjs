@@ -18,6 +18,24 @@ export default {
 			input: 'src/object/assign.ts',
 			name: 'assign',
 		},
+		{
+			input: 'src/object/clone.ts',
+			name: 'clone',
+		},
+		{
+			input: 'src/object/cloneDeep.ts',
+			name: 'cloneDeep',
+			target: ['es2015'],
+		},
+		{
+			input: 'src/object/cloneLoop.ts',
+			name: 'cloneLoop',
+			target: ['es2015'],
+		},
+		{
+			input: 'src/object/cloneJSON.ts',
+			name: 'cloneJSON',
+		},
 		//==> dom
 		{
 			input: 'src/dom/detectMouseDirection.ts',
