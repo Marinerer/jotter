@@ -54,6 +54,12 @@ function cloneLoop<T>(value: T): T {
 				continue
 			}
 
+			// 处理循环引用
+			if (map.has(sourceValue)) {
+				target[key] = map.get(sourceValue)
+				continue
+			}
+
 			// 处理特殊内置类型: Date, RegExp
 			if (sourceValue instanceof Date) {
 				target[key] = new Date(sourceValue.getTime())
@@ -61,12 +67,6 @@ function cloneLoop<T>(value: T): T {
 			}
 			if (sourceValue instanceof RegExp) {
 				target[key] = new RegExp(sourceValue.source, sourceValue.flags)
-				continue
-			}
-
-			// 处理循环引用
-			if (map.has(sourceValue)) {
-				target[key] = map.get(sourceValue)
 				continue
 			}
 

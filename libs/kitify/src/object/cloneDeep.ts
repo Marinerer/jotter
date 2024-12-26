@@ -2,9 +2,10 @@
  * 深度克隆注意事项：
  * 1. 支持深度克隆数据
  * 2. 支持特殊类型数据，如 Map、Set、Date、RegExp、ArrayBuffer、TypedArray、DataView、Symbol 等
- * 3. 循环引用处理
- * 4. 栈溢出处理
- * 5. 性能优化
+ * 3. 对象属性描述符
+ * 4. 循环引用处理
+ * 5. 栈溢出处理
+ * 6. 性能优化
  */
 
 /**
@@ -58,6 +59,19 @@ function deepClone<T>(target: T, hash = new WeakMap()): T {
 		return hash.get(target)
 	}
 
+	// 处理数组
+	//! 提升判断，优化性能
+	if (Array.isArray(target)) {
+		const result: any[] = []
+		hash.set(target, result)
+
+		for (let i = 0, len = target.length; i < len; i++) {
+			result[i] = deepClone(target[i], hash)
+		}
+
+		return result as any
+	}
+
 	// 处理特殊内置类型: Date, RegExp, ArrayBuffer, TypedArray, DataView, Map, Set
 	if (target instanceof Date) {
 		return new Date(target.getTime()) as any
@@ -106,18 +120,6 @@ function deepClone<T>(target: T, hash = new WeakMap()): T {
 		target.forEach((value) => {
 			result.add(deepClone(value, hash))
 		})
-
-		return result as any
-	}
-
-	// 处理数组
-	if (Array.isArray(target)) {
-		const result: any[] = []
-		hash.set(target, result)
-
-		for (let i = 0, len = target.length; i < len; i++) {
-			result[i] = deepClone(target[i], hash)
-		}
 
 		return result as any
 	}
