@@ -1,0 +1,3 @@
+[submodule "kitify"]
+	path = kitify
+	url = https://github.com/Marinerer/kitify.git
