@@ -1,124 +1,54 @@
-/**
- 请使用`JavaScript`实现一个空闲时间执行任务的调度器，任务支持优先级、超时、延时和取消功能。要求如下：
-1. 任务优先级（高、中、低）
-2. 任务超时（超过指定时间未执行则取消）
-3. 任务延时（延迟结束后任务进入调度队列）
-4. 任务取消（随时取消任务）
-5. 任务队列管理（任务按照优先级自动调度）
+import { TaskFn, TaskId, TaskStatus, TaskResult, TaskOptions as AddTaskOptions } from './types'
+import { TASK_STATUS } from './const'
+import { Task, type TaskOptions } from './Task'
+import { TaskEvent } from './TaskEvent'
 
-可能的边界情况：
-- 任务在即将执行的时候被取消。
-- 超时时间和任务执行时间刚好同时发生。
-- 多个任务同时加入队列，按正确顺序执行。
-- 使用requestAnimationFrame降级处理requestIdleCallback不支持的情况。
-
-请实现这个调度器，并给出示例代码。
-
-
-1. window.requestIdleCallback() 在浏览器空闲时间执行 (在下一帧之前如果还有剩余时间)
-2. window.requestAnimationFrame() 在浏览器每次重绘之前执行 (下一次重绘之前)
- */
-
-// 任务优先级枚举
-const PRIORITY = {
-	low: 1,
-	normal: 2,
-	high: 3,
+interface IdleDeadline {
+	readonly didTimeout: boolean
+	timeRemaining(): number
 }
-// 任务状态枚举
-const TASK_STATUS = {
-	PENDING: 'pending',
-	RUNNING: 'running',
-	COMPLETED: 'completed',
-	FAILED: 'failed',
-	CANCELLED: 'cancelled',
-	TIMEOUT: 'timeout',
+type IdleRequestCallback = (deadline: IdleDeadline) => void
+interface IdleRequestScheduler {
+	requestIdle: (callback: IdleRequestCallback) => number | NodeJS.Timeout
+	cancelIdle: (handle: number) => void
 }
 
-class Task {
-	/**
-	 * 创建任务
-	 * @param {function} fn 任务函数
-	 * @param {object} options 任务选项
-	 * @param {string|number} options.id 任务id
-	 * @param {'high'|'normal'|'low'} options.priority 任务优先级，默认为 `normal`
-	 * @param {number} options.timeout 超时时间，单位ms (超时未执行则取消)
-	 * @param {number} options.delay 延时时间，单位ms (延迟结束后任务进入调度队列)
-	 */
-	constructor(fn, options = {}) {
-		this.id = options.id
-		this.fn = fn
-		this.priority = PRIORITY[options.priority] || PRIORITY.normal
-		this.status = TASK_STATUS.PENDING
-		this.delay = options.delay || 0
-		this.timeout = options.timeout || 0
-		this.createdAt = Date.now()
-		this.delayId = null
-		this.timeoutId = null
-	}
-}
+class IdleTask extends TaskEvent {
+	private _queue: Task[] = [] // 任务队列
+	private _results: { [key: TaskId]: TaskResult } = Object.create(null) // 记录任务执行结果
+	private _id: number = 0 // 任务id自增
 
-class TaskEvent {
-	constructor() {
-		this._events = Object.create(null)
-	}
+	private _running: boolean = false // 控制`启动/停止`调度器开关（调度器是否正在运行）
+	private _processing: boolean = false // 是否正在处理任务，无任务时自动暂停调度器
 
-	on(taskId, event, callback) {
-		if (!taskId || !event || !callback) {
-			throw new Error('Invalid arguments')
-		}
-		if (typeof callback !== 'function') {
-			throw new Error('Callback must be a function')
-		}
+	private _idleScheduler: IdleRequestScheduler // 调度器
+	private _idleSchedulerId: number | NodeJS.Timeout | null = null // 调度器id
 
-		const type = `${taskId}:${event}`
-		if (!this._events[type]) {
-			this._events[type] = []
-		}
-		this._events[type].push(callback)
-		return () => this.off(taskId, type, callback)
-	}
-
-	off(taskId, event, callback) {
-		const type = `${taskId}:${event}`
-		const listeners = this._events[type]
-		if (listeners) {
-			this._events[type] = listeners.filter((cb) => cb !== callback)
-		}
-		return this
-	}
-
-	emit(taskId, event, data) {
-		const type = `${taskId}:${event}`
-		const listeners = this._events[type]
-		if (listeners) {
-			listeners.forEach((cb) => cb(data))
-			delete this._events[type]
-		}
-		return this
-	}
-}
-
-class IdleTaskScheduler extends TaskEvent {
 	constructor() {
 		super()
-		this._queue = []
-		this._results = Object.create(null)
-		this._id = 0
 
-		this._running = false // 控制`启动/停止`调度器开关（调度器是否正在运行）
-		this._processing = false // 是否正在处理任务，无任务时自动暂停调度器
-
+		// 初始化调度器
 		this._idleScheduler = this._getIdleScheduler()
 
+		// 启动调度器
 		this.start()
 	}
 
+	/**
+	 * 获取调度器
+	 */
 	_getIdleScheduler() {
 		const timeoutPolyfill = () => ({
-			requestIdle: (callback) =>
-				setTimeout(() => callback({ timeRemaining: () => 1, didTimeout: false }), 0),
-			cancelIdle: (id) => clearTimeout(id),
+			requestIdle: (callback: IdleRequestCallback) => {
+				const start = performance.now()
+				return setTimeout(() =>
+					callback({
+						didTimeout: false,
+						timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
+					})
+				)
+			},
+			cancelIdle: (id: number) => clearTimeout(id),
 		})
 
 		if (typeof window === 'undefined') {
@@ -131,15 +61,16 @@ class IdleTaskScheduler extends TaskEvent {
 				}
 			} else if ('requestAnimationFrame' in window) {
 				return {
-					requestIdle: (callback) =>
-						window.requestAnimationFrame(() => {
-							const start = performance.now()
+					requestIdle: (callback: IdleRequestCallback) => {
+						const start = performance.now()
+						return window.requestAnimationFrame(() => {
 							callback({
 								didTimeout: false,
 								timeRemaining: () => Math.max(0, 16.666 - (performance.now() - start)),
 							})
-						}),
-					cancelIdle: window.cancelAnimationFrame.bind(window),
+						})
+					},
+					cancelIdle: (id: number) => window.cancelAnimationFrame(id),
 				}
 			} else {
 				return timeoutPolyfill()
@@ -147,18 +78,27 @@ class IdleTaskScheduler extends TaskEvent {
 		}
 	}
 
-	addTask(fn, options = {}) {
+	/**
+	 * 新增任务
+	 * @param fn 任务函数
+	 * @param options 任务选项
+	 * @returns
+	 */
+	addTask(fn: TaskFn, options: AddTaskOptions = {}) {
 		if (typeof fn !== 'function') {
 			throw new Error('First argument must be a function')
 		}
 		if (typeof options === 'string') {
 			options = { priority: options }
 		}
-		if (options.timeout > 0 && options.delay > 0 && options.timeout >= options.delay) {
+		if (options.timeout! > 0 && options.delay! > 0 && options.timeout! >= options.delay!) {
 			throw new Error('Timeout must be less than delay')
 		}
+		if (!options.id) {
+			options.id = ++this._id
+		}
 
-		const task = new Task(fn, options)
+		const task = new Task(fn, options as TaskOptions)
 
 		if (!task.id) {
 			task.id = ++this._id
@@ -197,7 +137,7 @@ class IdleTaskScheduler extends TaskEvent {
 	}
 
 	// 添加任务到队列
-	_enqueue(task) {
+	_enqueue(task: Task) {
 		if (task.status !== TASK_STATUS.PENDING) return
 
 		this._queue.push(task)
@@ -211,7 +151,13 @@ class IdleTaskScheduler extends TaskEvent {
 		}
 	}
 
-	cancelTask(taskId, reason = TASK_STATUS.CANCELLED) {
+	/**
+	 * 取消任务
+	 * @param taskId 任务id
+	 * @param reason 任务状态，默认为取消
+	 * @returns
+	 */
+	cancelTask(taskId: TaskId, reason: TaskStatus = TASK_STATUS.CANCELLED) {
 		const taskInfo = this._results[taskId]
 
 		if (!taskInfo || taskInfo.status !== TASK_STATUS.PENDING) {
@@ -246,9 +192,9 @@ class IdleTaskScheduler extends TaskEvent {
 		}
 		this._processing = true
 
-		const scheduleTask = (deadline) => {
+		const scheduleTask = (deadline: IdleDeadline) => {
 			while (this._queue.length > 0 && (deadline.timeRemaining() > 0 || deadline.didTimeout)) {
-				const task = this._queue.shift()
+				const task = this._queue.shift()!
 				this._runTask(task)
 			}
 
@@ -264,7 +210,7 @@ class IdleTaskScheduler extends TaskEvent {
 	}
 
 	// 执行任务
-	_runTask(task) {
+	_runTask(task: Task) {
 		const taskInfo = this._results[task.id]
 
 		// 检查任务是否已被取消
@@ -296,7 +242,8 @@ class IdleTaskScheduler extends TaskEvent {
 		}
 	}
 
-	_updateTaskStatus(taskId, status, data) {
+	// 更新任务状态
+	_updateTaskStatus(taskId: TaskId, status: TaskStatus, data?: any) {
 		const taskInfo = this._results[taskId]
 		if (taskInfo) {
 			// 更新任务状态
@@ -308,6 +255,9 @@ class IdleTaskScheduler extends TaskEvent {
 		return false
 	}
 
+	/**
+	 * 启动任务调度器
+	 */
 	start() {
 		if (this._running) return
 
@@ -315,28 +265,43 @@ class IdleTaskScheduler extends TaskEvent {
 		this._schedule()
 	}
 
+	/**
+	 * 停止任务调度器
+	 */
 	stop() {
 		if (!this._running) return
 
 		this._running = false
-		this._idleScheduler.cancelIdle(this._idleSchedulerId) // 取消调度器
+		this._idleScheduler.cancelIdle(this._idleSchedulerId as number) // 取消调度器
 	}
 
+	/**
+	 * 清空任务队列
+	 */
 	clear() {
 		if (this._queue.length > 0) {
 			this._queue.forEach((task) => this.cancelTask(task.id))
 		}
-		this._idleScheduler.cancelIdle(this._idleSchedulerId) // 取消调度器
+		this._idleScheduler.cancelIdle(this._idleSchedulerId as number) // 取消调度器
 		this._events = Object.create(null) // 清空事件监听
 	}
 
+	/**
+	 * 获取任务数量
+	 */
 	getTaskSize() {
 		return this._queue.length // 返回队列中的任务数量
 	}
 
-	// 获取任务状态
-	getTaskStatus(taskId) {
+	/**
+	 * 获取任务状态
+	 * @param taskId 任务id
+	 * @returns 任务状态
+	 */
+	getTaskStatus(taskId: TaskId) {
 		const result = this._results[taskId]
 		return result ? result.status : null
 	}
 }
+
+export default IdleTask
