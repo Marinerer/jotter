@@ -49,7 +49,7 @@ class IdleTask extends TaskEvent {
 	_getIdleScheduler() {
 		const timeoutPolyfill = () => ({
 			requestIdle: (callback: IdleRequestCallback) => {
-				const start = performance.now()
+				const start = Date.now()
 				return setTimeout(() =>
 					callback({
 						didTimeout: false,
