@@ -1,7 +1,4 @@
 //@ts-nocheck
-/**
- * @jest-environment jsdom
- */
 import IdleTask from '../src/index'
 
 // Mock performance API
@@ -27,6 +24,15 @@ describe('IdleTask', () => {
 		test('should create a task with default options', () => {
 			const fn = jest.fn()
 			const taskId = idleTask.addTask(fn)
+
+			expect(taskId).toBe(1)
+			expect(idleTask.getTask(taskId).status).toBe('pending')
+			expect(idleTask.getTaskSize()).toBe(1)
+		})
+
+		test('should create a task with options is string', () => {
+			const fn = jest.fn()
+			const taskId = idleTask.addTask(fn, 'high')
 
 			expect(taskId).toBe(1)
 			expect(idleTask.getTask(taskId).status).toBe('pending')
@@ -262,17 +268,17 @@ describe('IdleTask', () => {
 
 			expect(mockRequestIdleCallback).toHaveBeenCalled()
 
-			// 清理
+			// 还原
 			global.window = originalWindow
 		})
 
 		test('should use requestAnimationFrame fallback', () => {
 			// 保存原始window对象
 			const originalWindow = global.window
+			delete global.window.requestIdleCallback //! 默认 Jest DOM环境不存在 requestIdleCallback
 
 			const mockRequestAnimationFrame = jest.fn()
 			const mockCancelAnimationFrame = jest.fn()
-			delete global.window.requestIdleCallback //! 默认 Jest DOM环境不存在 requestIdleCallback
 			global.window.requestAnimationFrame = mockRequestAnimationFrame
 			global.window.cancelAnimationFrame = mockCancelAnimationFrame
 
@@ -282,16 +288,68 @@ describe('IdleTask', () => {
 
 			expect(mockRequestAnimationFrame).toHaveBeenCalled()
 
-			// 清理
+			// 还原
 			global.window = originalWindow
 		})
 
 		test('should use setTimeout fallback in non-browser environment', () => {
+			// 保存原始window对象
+			const originalWindow = global.window
+			delete global.window
+
 			const fn = jest.fn()
+			const idleTask = new IdleTask()
 			idleTask.addTask(fn)
 
+			// 运行定时器
 			jest.runAllTimers()
 			expect(fn).toHaveBeenCalled()
+
+			// 还原
+			global.window = originalWindow
+		})
+
+		test('should calculate correct timeRemaining in timeoutPolyfill', () => {
+			// 保存原始window对象
+			const originalWindow = global.window
+			delete global.window
+
+			// Mock Date.now() 来控制时间
+			let currentTime = 10
+			const mockNow = jest.spyOn(Date, 'now').mockImplementation(() => currentTime)
+
+			const idleTask = new IdleTask()
+			idleTask._idleScheduler.requestIdle((deadline) => {
+				// expect(deadline.timeRemaining()).toBeGreaterThanOrEqual(50)
+				expect(deadline.timeRemaining()).toBe(20) // 50 - (Date.now() - start)
+			})
+
+			// 设置当前时间并运行定时器
+			currentTime = 40
+			jest.runAllTimers()
+
+			// 清理&还原
+			mockNow.mockRestore()
+			global.window = originalWindow
+		})
+
+		test('should clear timeout in timeoutPolyfill', () => {
+			// 保存并移除 window 对象
+			const originalWindow = global.window
+			delete global.window
+
+			const idleTask = new IdleTask()
+			// 使用 spy 监视 clearTimeout
+			const clearTimeoutSpy = jest.spyOn(global, 'clearTimeout')
+			// 停止任务调度
+			idleTask.stop()
+
+			// 验证 clearTimeout 被调用
+			expect(clearTimeoutSpy).toHaveBeenCalled()
+
+			// 清理
+			clearTimeoutSpy.mockRestore()
+			global.window = originalWindow
 		})
 	})
 })
