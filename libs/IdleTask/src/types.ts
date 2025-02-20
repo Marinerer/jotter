@@ -9,11 +9,6 @@ export type TaskOptions =
 	| TaskPriorityKey
 	| {
 			/**
-			 * 任务id
-			 */
-			id?: TaskId
-
-			/**
 			 * 任务优先级
 			 * @default 'normal'
 			 */
@@ -28,6 +23,9 @@ export type TaskOptions =
 			 * 延时时间，单位ms (延迟结束后任务进入调度队列)
 			 */
 			delay?: number
+
+			// 其他自定义属性，不支持自定义 Id
+			[key: string]: any
 	  }
 
 export interface TaskResult {

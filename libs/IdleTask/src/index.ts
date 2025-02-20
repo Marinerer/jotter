@@ -8,11 +8,20 @@ interface IdleDeadline {
 	timeRemaining(): number
 }
 type IdleRequestCallback = (deadline: IdleDeadline) => void
-interface IdleRequestScheduler {
+interface IdleScheduler {
 	requestIdle: (callback: IdleRequestCallback) => number | NodeJS.Timeout
 	cancelIdle: (handle: number) => void
 }
 
+/**
+ * 空闲时间执行任务的调度器
+ * 1. 任务优先级（高、中、低）
+ * 2. 任务超时（超过指定时间未执行则取消）
+ * 3. 任务延时（延迟结束后任务进入调度队列）
+ * 4. 任务取消（随时取消任务）
+ * 5. 任务队列管理（任务按照优先级自动调度）
+ * 6. 任务状态追踪（监听任务状态变更事件）
+ */
 class IdleTask extends TaskEvent {
 	private _queue: Task[] = [] // 任务队列
 	private _results: { [key: TaskId]: TaskResult } = Object.create(null) // 记录任务执行结果
@@ -21,7 +30,7 @@ class IdleTask extends TaskEvent {
 	private _running: boolean = false // 控制`启动/停止`调度器开关（调度器是否正在运行）
 	private _processing: boolean = false // 是否正在处理任务，无任务时自动暂停调度器
 
-	private _idleScheduler: IdleRequestScheduler // 调度器
+	private _idleScheduler: IdleScheduler // 调度器
 	private _idleSchedulerId: number | NodeJS.Timeout | null = null // 调度器id
 
 	constructor() {
@@ -94,15 +103,10 @@ class IdleTask extends TaskEvent {
 		if (options.timeout! > 0 && options.delay! > 0 && options.timeout! >= options.delay!) {
 			throw new Error('Timeout must be less than delay')
 		}
-		if (!options.id) {
-			options.id = ++this._id
-		}
+		//! 不支持自定义 Id
+		options.id = ++this._id
 
 		const task = new Task(fn, options as TaskOptions)
-
-		if (!task.id) {
-			task.id = ++this._id
-		}
 
 		// 处理任务超时，超过设定的 timeout 还未执行则自动取消任务
 		if (task.timeout > 0) {
@@ -116,10 +120,10 @@ class IdleTask extends TaskEvent {
 		// 处理任务延时，延时结束后任务进入调度队列
 		if (task.delay > 0) {
 			task.delayId = setTimeout(() => {
-				this._enqueue(task)
+				this._enqueueTask(task)
 			}, task.delay)
 		} else {
-			this._enqueue(task)
+			this._enqueueTask(task)
 		}
 
 		// 记录任务信息
@@ -137,7 +141,7 @@ class IdleTask extends TaskEvent {
 	}
 
 	// 添加任务到队列
-	_enqueue(task: Task) {
+	_enqueueTask(task: Task) {
 		if (task.status !== TASK_STATUS.PENDING) return
 
 		this._queue.push(task)
@@ -289,8 +293,21 @@ class IdleTask extends TaskEvent {
 	/**
 	 * 获取任务数量
 	 */
-	getTaskSize() {
-		return this._queue.length // 返回队列中的任务数量
+	getTaskSize(status: TaskStatus = TASK_STATUS.PENDING) {
+		if (status) {
+			const results = this._results
+			let count = 0
+			for (const key in results) {
+				if (Object.prototype.hasOwnProperty.call(results, key)) {
+					if (results[key].status === status) {
+						count++
+					}
+				}
+			}
+
+			return count
+		}
+		return Object.keys(this._results).length
 	}
 
 	/**
@@ -298,9 +315,15 @@ class IdleTask extends TaskEvent {
 	 * @param taskId 任务id
 	 * @returns 任务状态
 	 */
-	getTaskStatus(taskId: TaskId) {
+	getTask(taskId: TaskId) {
 		const result = this._results[taskId]
-		return result ? result.status : null
+		return result
+			? {
+					id: result.id,
+					status: result.status,
+					priority: result.priority,
+				}
+			: null
 	}
 }
 
