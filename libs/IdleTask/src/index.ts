@@ -47,7 +47,32 @@ class IdleTask extends TaskEvent {
 	 * 获取调度器
 	 */
 	_getIdleScheduler() {
-		const timeoutPolyfill = () => ({
+		// requestIdleCallback 优先
+		if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+			return {
+				requestIdle: window.requestIdleCallback.bind(window),
+				cancelIdle: window.cancelIdleCallback.bind(window),
+			}
+		}
+
+		// requestAnimationFrame 次之
+		if (typeof window !== 'undefined' && 'requestAnimationFrame' in window) {
+			return {
+				requestIdle: (callback: IdleRequestCallback) => {
+					const start = performance.now()
+					return window.requestAnimationFrame(() => {
+						callback({
+							didTimeout: false,
+							timeRemaining: () => Math.max(0, 16.666 - (performance.now() - start)),
+						})
+					})
+				},
+				cancelIdle: (id: number) => window.cancelAnimationFrame(id),
+			}
+		}
+
+		// 非浏览器 & 兜底方案
+		return {
 			requestIdle: (callback: IdleRequestCallback) => {
 				const start = Date.now()
 				return setTimeout(() =>
@@ -58,32 +83,6 @@ class IdleTask extends TaskEvent {
 				)
 			},
 			cancelIdle: (id: number) => clearTimeout(id),
-		})
-
-		if (typeof window === 'undefined') {
-			return timeoutPolyfill() // 非浏览器环境
-		} else {
-			if ('requestIdleCallback' in window) {
-				return {
-					requestIdle: window.requestIdleCallback.bind(window),
-					cancelIdle: window.cancelIdleCallback.bind(window),
-				}
-			} else if ('requestAnimationFrame' in window) {
-				return {
-					requestIdle: (callback: IdleRequestCallback) => {
-						const start = performance.now()
-						return window.requestAnimationFrame(() => {
-							callback({
-								didTimeout: false,
-								timeRemaining: () => Math.max(0, 16.666 - (performance.now() - start)),
-							})
-						})
-					},
-					cancelIdle: (id: number) => window.cancelAnimationFrame(id),
-				}
-			} else {
-				return timeoutPolyfill()
-			}
 		}
 	}
 
@@ -286,7 +285,7 @@ class IdleTask extends TaskEvent {
 		if (this._queue.length > 0) {
 			this._queue.forEach((task) => this.cancelTask(task.id))
 		}
-		this._idleScheduler.cancelIdle(this._idleSchedulerId as number) // 取消调度器
+		// this._idleScheduler.cancelIdle(this._idleSchedulerId as number) // 取消调度器
 		this._events = Object.create(null) // 清空事件监听
 	}
 
