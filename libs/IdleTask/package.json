@@ -20,8 +20,11 @@
 		"dist"
 	],
 	"buildOptions": {
-		"name": "Animator",
-		"target": "es2015"
+		"name": "IdleTask",
+		"target": [
+			"es2015",
+			"es5"
+		]
 	},
 	"keywords": [
 		"animator",
