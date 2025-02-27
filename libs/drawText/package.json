@@ -1,0 +1,51 @@
+{
+	"name": "canvas-draw-text",
+	"version": "0.0.1",
+	"description": "Animator is an animation playback controller. It makes it easy to create and control JavaScript animations.",
+	"type": "module",
+	"main": "dist/index.js",
+	"unpkg": "dist/index.min.js",
+	"jsdelivr": "dist/index.min.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"module": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./*": "./dist/*"
+	},
+	"files": [
+		"dist"
+	],
+	"buildOptions": {
+		"name": "drawText",
+		"target": [
+			"es2015",
+			"es5"
+		]
+	},
+	"keywords": [
+		"animator",
+		"animate",
+		"animation",
+		"animation frame",
+		"animation player",
+		"animation controller",
+		"requestAnimationFrame"
+	],
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org"
+	},
+	"sideEffects": false,
+	"homepage": "https://github.com/Marinerer/jotter/tree/main/libs/animator",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Marinerer/jotter.git",
+		"directory": "libs/Animator"
+	},
+	"author": "Mariner <mengqing723@gmail.com>",
+	"license": "MIT"
+}
