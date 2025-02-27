@@ -17,7 +17,7 @@
  * 5. 使用 `ctx.save()` 和 `ctx.restore()` 确保上下文状态不被污染
  */
 
-import { cssPadding, processFont, measureTextWidth } from './utils'
+import { cssPadding, getBgPadding, processFont, measureTextWidth, getTextMetrics } from './utils'
 import type { IOptions, DrawTextResult } from './types'
 
 // 重载签名
@@ -52,6 +52,7 @@ function drawText(
  * @param {string} [options.verticalAlign='top'] - 垂直对齐方式 ('top', 'middle', 'bottom')
  * @param {string|Object} [options.font] - 字体样式设置，字符串或对象 (`16px Arial` | `{ size, family, weight, style }`)
  * @param {string} [options.color='#000'] - 文本颜色
+ * @param {string} [options.backgroundColor] - 文本背景色
  * @param {number} [options.lineHeight=1.2] - 行高倍数
  * @param {number} [options.letterSpacing=0] - 字间距
  * @param {boolean} [options.wrap=true] - 是否自动换行
@@ -101,6 +102,8 @@ function drawText(
 		textAlign: 'left',
 		verticalAlign: 'top',
 		color: '#000',
+		// backgroundColor: '',
+		backgroundPadding: 0,
 		lineHeight: 1.2,
 		letterSpacing: 0,
 		wrap: true,
@@ -112,6 +115,7 @@ function drawText(
 
 	// 处理内边距
 	const [paddingTop, paddingRight, paddingBottom, paddingLeft] = cssPadding(options.padding)
+	const [bgPaddingX, bgPaddingY] = getBgPadding(options.backgroundPadding!)
 
 	// 计算实际可用区域
 	const availableWidth = width - paddingLeft - paddingRight
@@ -325,9 +329,13 @@ function drawText(
 		ctx.clip()
 	}
 
+	const { actualTextHeight, textAscent } = getTextMetrics(ctx, fontSize)
+
 	// 绘制文本
 	for (let i = 0; i < visibleLines.length; i++) {
 		const line = visibleLines[i]
+		if (line.length === 0) continue // 跳过空行的背景绘制
+
 		const lineWidth = visibleLineWidths[i]
 		let lineX = x + paddingLeft
 
@@ -336,6 +344,30 @@ function drawText(
 			lineX = x + paddingLeft + (availableWidth - lineWidth) / 2
 		} else if (options.textAlign === 'right') {
 			lineX = x + paddingLeft + availableWidth - lineWidth
+		}
+
+		// 如果有背景色，先绘制背景
+		if (options.backgroundColor) {
+			const originalFillStyle: string = ctx.fillStyle //保存文本颜色
+			ctx.fillStyle = options.backgroundColor
+
+			// 设置背景高度 - 使用文本实际高度或行高
+			const bgHeight = actualTextHeight + bgPaddingY * 2
+
+			// 计算背景矩形的位置和尺寸
+			const bgX = lineX - bgPaddingX
+			// 垂直对齐背景，确保背景覆盖文本
+			const baselineY = startY + i * lineHeight + fontSize
+			// 将背景垂直定位到文本基线，并考虑文本的上下延伸
+			const bgY = baselineY - textAscent - bgPaddingY
+
+			const bgWidth = lineWidth + bgPaddingX * 2
+
+			// 绘制背景矩形
+			ctx.fillRect(bgX, bgY, bgWidth, bgHeight)
+
+			// 恢复文本颜色
+			ctx.fillStyle = originalFillStyle
 		}
 
 		// 绘制当前行

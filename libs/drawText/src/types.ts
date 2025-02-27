@@ -54,6 +54,13 @@ export interface IOptions {
 	color?: string
 
 	/**
+	 * 背景颜色
+	 */
+	backgroundColor?: string
+
+	backgroundPadding?: number | [number, number]
+
+	/**
 	 * 行高
 	 * @default 1.2
 	 */
