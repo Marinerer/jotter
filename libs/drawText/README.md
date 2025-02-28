@@ -1,11 +1,11 @@
 # canvas-draw-text
 
-[![version](https://img.shields.io/npm/v/canvas-draw-text?style=flat-square)](npm-url)
+[![version](https://img.shields.io/npm/v/canvas-draw-text?style=flat-square)][npm-url]
 [![CI status][github-action-image]][github-action-url]
 [![codecov](https://codecov.io/gh/Marinerer/jotter/graph/badge.svg?token=G7QXEHCEXW)](https://codecov.io/gh/Marinerer/jotter)
-[![downloads](https://img.shields.io/npm/dm/canvas-draw-text?style=flat-square)](npm-url)
+[![downloads](https://img.shields.io/npm/dm/canvas-draw-text?style=flat-square)][npm-url]
 [![size](https://img.shields.io/bundlephobia/minzip/canvas-draw-text?style=flat-square)](https://bundlephobia.com/package/canvas-draw-text)
-[![license](https://img.shields.io/npm/l/canvas-draw-text?style=flat-square)](github-url)
+[![license](https://img.shields.io/npm/l/canvas-draw-text?style=flat-square)][github-url]
 
 [github-url]: https://github.com/Marinerer/jotter/blob/main/libs/drawText
 [npm-url]: https://www.npmjs.com/package/canvas-draw-text
@@ -85,32 +85,32 @@ Draws text on a canvas with advanced layout and styling options.
 
 #### Parameters
 
-| Parameter | Type                     | Default       | Description                       |
-| --------- | ------------------------ | ------------- | --------------------------------- |
-| `ctx`     | CanvasRenderingContext2D | _required_    | Canvas 2D context                 |
-| `text`    | string                   | _required_    | Text to draw                      |
-| `x`       | number                   | 0             | Left position of the drawing area |
-| `y`       | number                   | 0             | Top position of the drawing area  |
-| `width`   | number                   | canvas.width  | Width of the drawing area         |
-| `height`  | number                   | canvas.height | Height of the drawing area        |
-| `options` | object                   | `{}`          | Configuration options (see below) |
+| Parameter | Type                       | Default       | Description                       |
+| --------- | -------------------------- | ------------- | --------------------------------- |
+| `ctx`     | `CanvasRenderingContext2D` | _required_    | Canvas 2D context                 |
+| `text`    | `string`                   | _required_    | Text to draw                      |
+| `x`       | `number`                   | 0             | Left position of the drawing area |
+| `y`       | `number`                   | 0             | Top position of the drawing area  |
+| `width`   | `number`                   | canvas.width  | Width of the drawing area         |
+| `height`  | `number`                   | canvas.height | Height of the drawing area        |
+| `options` | `object`                   | `{}`          | Configuration options (see below) |
 
 #### Options
 
-| Option              | Type           | Default   | Description                                                                           |
-| ------------------- | -------------- | --------- | ------------------------------------------------------------------------------------- |
-| `padding`           | number\|array  | 0         | Inner padding. Can be a single number or `[top, right, bottom, left]`                 |
-| `textAlign`         | string         | 'left'    | Horizontal alignment: 'left', 'center', 'right'                                       |
-| `verticalAlign`     | string         | 'top'     | Vertical alignment: 'top', 'middle', 'bottom'                                         |
-| `font`              | string\|object | -         | Font settings. String format: '16px Arial' or object: `{size, family, weight, style}` |
-| `color`             | string         | '#000'    | Text color                                                                            |
-| `backgroundColor`   | string         | -         | Text background color                                                                 |
-| `backgroundPadding` | number\|array  | 0         | Padding around text for background.                                                   |
-| `lineHeight`        | number         | 1.2       | Line height multiplier                                                                |
-| `letterSpacing`     | number         | 0         | Spacing between characters                                                            |
-| `wrap`              | boolean        | true      | Whether to automatically wrap text                                                    |
-| `overflow`          | string         | 'visible' | Overflow handling: 'visible', 'hidden'                                                |
-| `textOverflow`      | string         | ''        | Text to display when content is truncated, e.g., `'...'   `                           |
+| Option              | Type             | Default     | Description                                                                           |
+| ------------------- | ---------------- | ----------- | ------------------------------------------------------------------------------------- |
+| `padding`           | `number\|array`  | `0`         | Inner padding. Can be a single number or `[top, right, bottom, left]`                 |
+| `textAlign`         | `string`         | `'left'`    | Horizontal alignment: 'left', 'center', 'right'                                       |
+| `verticalAlign`     | `string`         | `'top'`     | Vertical alignment: 'top', 'middle', 'bottom'                                         |
+| `font`              | `string\|object` | -           | Font settings. String format: '16px Arial' or object: `{size, family, weight, style}` |
+| `color`             | `string`         | `'#000'`    | Text color                                                                            |
+| `backgroundColor`   | `string`         | -           | Text background color                                                                 |
+| `backgroundPadding` | `number\|array`  | `0`         | Padding around text for background.                                                   |
+| `lineHeight`        | `number`         | `1.2`       | Line height multiplier                                                                |
+| `letterSpacing`     | `number`         | `0`         | Spacing between characters                                                            |
+| `wrap`              | `boolean`        | `true`      | Whether to automatically wrap text                                                    |
+| `overflow`          | `string`         | `'visible'` | Overflow handling: 'visible', 'hidden'                                                |
+| `textOverflow`      | `string`         | `''`        | Text to display when content is truncated, e.g., `'...'   `                           |
 
 #### Return Value
 
@@ -118,15 +118,15 @@ The function returns an object with the following properties:
 
 | Property          | Type    | Description                                        |
 | ----------------- | ------- | -------------------------------------------------- |
-| `totalLines`      | number  | Total number of lines (including overflow)         |
-| `lines`           | number  | Number of visible lines                            |
-| `maxTextHeight`   | number  | Height of all text lines (including overflow)      |
-| `maxTextWidth`    | number  | Width of the widest text line (including overflow) |
-| `textHeight`      | number  | Height of visible text                             |
-| `textWidth`       | number  | Width of visible text                              |
-| `availableWidth`  | number  | Available width for drawing (after padding)        |
-| `availableHeight` | number  | Available height for drawing (after padding)       |
-| `overflow`        | boolean | Whether text overflow occurred                     |
+| `totalLines`      | `number`  | Total number of lines (including overflow)         |
+| `lines`           | `number`  | Number of visible lines                            |
+| `maxTextHeight`   | `number`  | Height of all text lines (including overflow)      |
+| `maxTextWidth`    | `number`  | Width of the widest text line (including overflow) |
+| `textHeight`      | `number`  | Height of visible text                             |
+| `textWidth`       | `number`  | Width of visible text                              |
+| `availableWidth`  | `number`  | Available width for drawing (after padding)        |
+| `availableHeight` | `number`  | Available height for drawing (after padding)       |
+| `overflow`        | `boolean` | Whether text overflow occurred                     |
 
 ## Browser Support
 
