@@ -1,7 +1,7 @@
 {
 	"name": "canvas-draw-text",
 	"version": "0.0.1",
-	"description": "Animator is an animation playback controller. It makes it easy to create and control JavaScript animations.",
+	"description": "A utility designed to simplify Canvas text rendering that offers advanced features for text layout, styling, and management on HTML5 Canvas.",
 	"type": "module",
 	"main": "dist/index.js",
 	"unpkg": "dist/index.min.js",
@@ -17,7 +17,8 @@
 		"./*": "./dist/*"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"global.d.ts"
 	],
 	"buildOptions": {
 		"name": "drawText",
@@ -27,24 +28,23 @@
 		]
 	},
 	"keywords": [
-		"animator",
-		"animate",
-		"animation",
-		"animation frame",
-		"animation player",
-		"animation controller",
-		"requestAnimationFrame"
+		"drawText",
+		"canvas",
+		"fillText",
+		"canvas drawText",
+		"canvas fillText",
+		"canvas text"
 	],
 	"publishConfig": {
 		"access": "public",
 		"registry": "https://registry.npmjs.org"
 	},
 	"sideEffects": false,
-	"homepage": "https://github.com/Marinerer/jotter/tree/main/libs/animator",
+	"homepage": "https://github.com/Marinerer/jotter/tree/main/libs/drawText",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Marinerer/jotter.git",
-		"directory": "libs/Animator"
+		"directory": "libs/drawText"
 	},
 	"author": "Mariner <mengqing723@gmail.com>",
 	"license": "MIT"
