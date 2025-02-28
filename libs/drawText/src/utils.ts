@@ -25,21 +25,6 @@ export function cssPadding(padding: IOptions['padding']): PaddingResult {
 	return [0, 0, 0, 0]
 }
 
-export function getBgPadding(padding: number | [number, number]) {
-	if (typeof padding === 'number') {
-		return [padding, padding]
-	} else if (Array.isArray(padding)) {
-		if (typeof padding[0] !== 'number') {
-			return [0, 0]
-		}
-		if (typeof padding[1] !== 'number') {
-			padding[1] = padding[0]
-		}
-		return padding
-	}
-	return [0, 0]
-}
-
 /**
  * 处理字体样式参数
  * @param {CanvasRenderingContext2D} ctx - Canvas 2D 上下文
@@ -110,7 +95,7 @@ export function getTextMetrics(ctx: CanvasRenderingContext2D, fontSize: number) 
 	// 获取文本实际度量信息，用于计算背景高度
 	const textMetrics = ctx.measureText('M') // 使用字母M作为参考
 	// 计算基于文本的实际高度
-	// 文本上半部高度 + 文本下半部高度
+	// 使用 fontBoundingBoxAscent 和 fontBoundingBoxDescent 获取文本上/下半部高度
 	// fontBoundingBoxAscent可能不支持，则使用fontSize的0.7倍作为近似
 	const textAscent = textMetrics.fontBoundingBoxAscent || fontSize * 0.7
 	const textDescent = textMetrics.fontBoundingBoxDescent || fontSize * 0.3

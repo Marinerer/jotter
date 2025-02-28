@@ -17,7 +17,7 @@
  * 5. 使用 `ctx.save()` 和 `ctx.restore()` 确保上下文状态不被污染
  */
 
-import { cssPadding, getBgPadding, processFont, measureTextWidth, getTextMetrics } from './utils'
+import { cssPadding, processFont, measureTextWidth, getTextMetrics } from './utils'
 import type { IOptions, DrawTextResult } from './types'
 
 // 重载签名
@@ -82,13 +82,12 @@ function drawText(
 	}
 
 	if (typeof width !== 'number') {
-		const canvas = ctx.canvas
-		width = canvas.width
-		height = canvas.height
-
 		if (typeof width === 'object') {
 			options = width
 		}
+		const canvas = ctx.canvas
+		width = canvas.width
+		height = canvas.height
 	}
 
 	if (typeof options !== 'object') {
@@ -115,7 +114,9 @@ function drawText(
 
 	// 处理内边距
 	const [paddingTop, paddingRight, paddingBottom, paddingLeft] = cssPadding(options.padding)
-	const [bgPaddingX, bgPaddingY] = getBgPadding(options.backgroundPadding!)
+	const [bgpaddingTop, bgPaddingRight, bgPaddingBottom, bgPaddingLeft] = cssPadding(
+		options.backgroundPadding!
+	)
 
 	// 计算实际可用区域
 	const availableWidth = width - paddingLeft - paddingRight
@@ -178,7 +179,7 @@ function drawText(
 
 			for (let i = 0; i < words.length; i++) {
 				const word = words[i]
-
+				// 拼接当前行文本
 				if (currentLine.length > 0) {
 					testLine = currentLine + (/[\u4e00-\u9fa5]/.test(paragraph) ? '' : ' ') + word
 				} else {
@@ -352,16 +353,16 @@ function drawText(
 			ctx.fillStyle = options.backgroundColor
 
 			// 设置背景高度 - 使用文本实际高度或行高
-			const bgHeight = actualTextHeight + bgPaddingY * 2
+			const bgHeight = actualTextHeight + bgpaddingTop + bgPaddingBottom
 
 			// 计算背景矩形的位置和尺寸
-			const bgX = lineX - bgPaddingX
+			const bgX = lineX - bgPaddingLeft
 			// 垂直对齐背景，确保背景覆盖文本
 			const baselineY = startY + i * lineHeight + fontSize
 			// 将背景垂直定位到文本基线，并考虑文本的上下延伸
-			const bgY = baselineY - textAscent - bgPaddingY
+			const bgY = baselineY - textAscent - bgpaddingTop
 
-			const bgWidth = lineWidth + bgPaddingX * 2
+			const bgWidth = lineWidth + bgPaddingLeft + bgPaddingRight
 
 			// 绘制背景矩形
 			ctx.fillRect(bgX, bgY, bgWidth, bgHeight)
