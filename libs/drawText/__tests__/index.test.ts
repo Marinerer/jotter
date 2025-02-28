@@ -415,7 +415,6 @@ describe('drawText function', () => {
 
 		test('should handle empty text', () => {
 			const result = drawText(ctx, '', 10, 10, 100, 50)
-			console.log(result)
 			expect(result.lines).toBe(1)
 			expect(result.textHeight).toBe(16 * 1.2) //fontSize * lineHeight
 			expect(ctx._text.length).toBe(0)
