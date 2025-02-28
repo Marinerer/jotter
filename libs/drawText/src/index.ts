@@ -423,7 +423,7 @@ function drawText(
  * 扩展 CanvasRenderingContext2D 原型 drawText 方法
  */
 drawText.use = function () {
-	if (!CanvasRenderingContext2D) {
+	if (typeof CanvasRenderingContext2D === 'undefined') {
 		console.error('[drawText] CanvasRenderingContext2D not found.')
 		return
 	}
