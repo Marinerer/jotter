@@ -1,4 +1,4 @@
-import { IOptions, DrawTextResult } from './types'
+import { IOptions, DrawTextResult } from './src/types'
 
 declare global {
 	interface CanvasRenderingContext2D {
