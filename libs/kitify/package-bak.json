@@ -64,17 +64,8 @@
 		},
 		"./*": "./dist/*"
 	},
-	"files": [
-		"dist",
-		"docs"
-	],
-	"keywords": [
-		"kitify",
-		"kit",
-		"utility",
-		"functions",
-		"lodash"
-	],
+	"files": ["dist", "docs"],
+	"keywords": ["kitify", "kit", "utility", "functions", "lodash"],
 	"publishConfig": {
 		"access": "public",
 		"registry": "https://registry.npmjs.org"
