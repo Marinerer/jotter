@@ -14,6 +14,7 @@
 | [@jotter/websocket](https://github.com/Marinerer/jotter/tree/main/libs/websocket)   | [![version](https://img.shields.io/npm/v/@jotter/websocket?style=flat-square)](https://www.npmjs.com/package/@jotter/websocket)   | Modern and useful WebSocket wrapper, with standard WebSocket API.                   |
 | [@jotter/animator](https://github.com/Marinerer/jotter/tree/main/libs/Animator)     | [![version](https://img.shields.io/npm/v/@jotter/animator?style=flat-square)](https://www.npmjs.com/package/@jotter/animator)     | Animator is an animation playback controller.                                       |
 | [@jotter/drag](https://github.com/Marinerer/jotter/tree/main/libs/Drag)             | [![version](https://img.shields.io/npm/v/@jotter/drag?style=flat-square)](https://www.npmjs.com/package/@jotter/animator)         | Lightweight "drag-and-drop" library of draggable elements within a specified range. |
+| [canvas-draw-text](https://github.com/Marinerer/jotter/tree/main/libs/drawText)               | [![version](https://img.shields.io/npm/v/canvas-draw-text?style=flat-square)](https://www.npmjs.com/package/drawText)               | A utility designed to simplify Canvas text rendering.                                     |
 | [dom-event-emit](https://github.com/Marinerer/jotter/tree/main/libs/domEmit)        | [![version](https://img.shields.io/npm/v/dom-event-emit?style=flat-square)](https://www.npmjs.com/package/dom-event-emit)         | A type-safe, flexible DOM event emitter for browser environments.                   |
 | [@jotter/emitter](https://github.com/Marinerer/jotter/tree/main/libs/emitter)       | [![version](https://img.shields.io/npm/v/@jotter/emitter?style=flat-square)](https://www.npmjs.com/package/@jotter/emitter)       | Simple and modern event emitter library.                                            |
 | [@jotter/dateformat](https://github.com/Marinerer/jotter/tree/main/libs/dateFormat) | [![version](https://img.shields.io/npm/v/@jotter/dateformat?style=flat-square)](https://www.npmjs.com/package/@jotter/dateformat) | A date/time formatting function.                                                    |
@@ -57,6 +58,19 @@
 - 🎨 Position or transform-based movement
 - 🎮 Custom drag handles
 - 📦 Zero dependencies
+
+### [canvas-draw-text](./libs/drawText/README.md)
+
+> A utility designed to simplify Canvas text rendering that offers advanced features for text layout, styling, and management on HTML5 Canvas.
+>
+> 旨在简化 Canvas 文本渲染的实用工具函数，它为 HTML5 Canvas 上的文本布局、样式和管理提供高级功能。
+
+- ✂️ Automatic Text Wrapping
+- 📰 Text Alignment
+- 📊 Rich Text Styling
+- 🧮 Layout Control
+- 🗳️ Overflow Handling
+- 🌏 Detailed Return Data
 
 ## License
 
