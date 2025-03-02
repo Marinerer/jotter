@@ -1,6 +1,6 @@
 {
 	"name": "@jotter/idle-task",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "IdleTask is a task scheduler based on browser idle time, designed for managing and executing priority-based task queues.",
 	"type": "module",
 	"main": "dist/index.js",
