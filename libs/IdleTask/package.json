@@ -1,7 +1,7 @@
 {
 	"name": "@jotter/idle-task",
-	"version": "2.0.1",
-	"description": "Animator is an animation playback controller. It makes it easy to create and control JavaScript animations.",
+	"version": "0.0.1",
+	"description": "IdleTask is a task scheduler based on browser idle time, designed for managing and executing priority-based task queues.",
 	"type": "module",
 	"main": "dist/index.js",
 	"unpkg": "dist/index.min.js",
@@ -27,24 +27,21 @@
 		]
 	},
 	"keywords": [
-		"animator",
-		"animate",
-		"animation",
-		"animation frame",
-		"animation player",
-		"animation controller",
-		"requestAnimationFrame"
+		"IdleRquestCallback",
+		"task scheduler",
+		"idle task",
+		"task"
 	],
 	"publishConfig": {
 		"access": "public",
 		"registry": "https://registry.npmjs.org"
 	},
 	"sideEffects": false,
-	"homepage": "https://github.com/Marinerer/jotter/tree/main/libs/animator",
+	"homepage": "https://github.com/Marinerer/jotter/tree/main/libs/IdleTask",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Marinerer/jotter.git",
-		"directory": "libs/Animator"
+		"directory": "libs/IdleTask"
 	},
 	"author": "Mariner <mengqing723@gmail.com>",
 	"license": "MIT"

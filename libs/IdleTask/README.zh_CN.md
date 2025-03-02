@@ -43,8 +43,6 @@ scheduler.on(taskId, 'completed', (result) => {
 })
 ```
 
-## 任务优先级
-
 支持三个优先级等级：
 
 ```javascript
@@ -59,21 +57,6 @@ const taskId = scheduler.addTask(
 - `high`: 高优先级（3）
 - `normal`: 普通优先级（2，默认）
 - `low`: 低优先级（1）
-
-## 任务配置选项
-
-```javascript
-const taskId = scheduler.addTask(
-	() => {
-		// 任务逻辑
-	},
-	{
-		priority: 'high', // 任务优先级
-		delay: 1000, // 延迟执行时间（毫秒）
-		timeout: 5000, // 任务超时时间（毫秒）
-	}
-)
-```
 
 ## API
 
