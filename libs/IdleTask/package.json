@@ -1,0 +1,48 @@
+{
+	"name": "@jotter/idle-task",
+	"version": "0.0.1",
+	"description": "IdleTask is a task scheduler based on browser idle time, designed for managing and executing priority-based task queues.",
+	"type": "module",
+	"main": "dist/index.js",
+	"unpkg": "dist/index.min.js",
+	"jsdelivr": "dist/index.min.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"module": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./*": "./dist/*"
+	},
+	"files": [
+		"dist"
+	],
+	"buildOptions": {
+		"name": "IdleTask",
+		"target": [
+			"es2015",
+			"es5"
+		]
+	},
+	"keywords": [
+		"IdleRquestCallback",
+		"task scheduler",
+		"idle task",
+		"task"
+	],
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org"
+	},
+	"sideEffects": false,
+	"homepage": "https://github.com/Marinerer/jotter/tree/main/libs/IdleTask",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Marinerer/jotter.git",
+		"directory": "libs/IdleTask"
+	},
+	"author": "Mariner <mengqing723@gmail.com>",
+	"license": "MIT"
+}
