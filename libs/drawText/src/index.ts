@@ -114,7 +114,7 @@ function drawText(
 
 	// 处理内边距
 	const [paddingTop, paddingRight, paddingBottom, paddingLeft] = cssPadding(options.padding)
-	const [bgpaddingTop, bgPaddingRight, bgPaddingBottom, bgPaddingLeft] = cssPadding(
+	const [bgPaddingTop, bgPaddingRight, bgPaddingBottom, bgPaddingLeft] = cssPadding(
 		options.backgroundPadding!
 	)
 
@@ -135,8 +135,13 @@ function drawText(
 		}
 	}
 
+	// 保存当前环境
+	ctx.save()
+
 	// 设置字体
 	const { fontSize } = processFont(ctx, options.font)
+	// 获取文本度量信息，用于后续计算
+	const { actualTextHeight, textAscent } = getTextMetrics(ctx, fontSize)
 	// 设置文本颜色
 	ctx.fillStyle = options.color!
 	// 处理字间距
@@ -313,9 +318,6 @@ function drawText(
 		startY = y + paddingTop + availableHeight - textHeight
 	}
 
-	// 保存当前环境
-	ctx.save()
-
 	// 设置裁剪区域，确保不会绘制到边界外
 	if (options.overflow === 'hidden') {
 		ctx.beginPath()
@@ -330,12 +332,15 @@ function drawText(
 		ctx.clip()
 	}
 
-	const { actualTextHeight, textAscent } = getTextMetrics(ctx, fontSize)
+	// 使用文本度量信息计算确切的基线位置
+	// 注意：绘制文本时，y 坐标是文本基线的位置，需要加上 fontSize * 0.8 (近似基线位置)
+	// 或直接使用 textAscent 来调整基线
+	const baselineOffset = textAscent
 
 	// 绘制文本
 	for (let i = 0; i < visibleLines.length; i++) {
 		const line = visibleLines[i]
-		if (line.length === 0) continue // 跳过空行的背景绘制
+		if (line.length === 0) continue // 跳过空行
 
 		const lineWidth = visibleLineWidths[i]
 		let lineX = x + paddingLeft
@@ -347,21 +352,20 @@ function drawText(
 			lineX = x + paddingLeft + availableWidth - lineWidth
 		}
 
+		// 计算当前行的 y 坐标（基线位置）
+		// 使用确切的基线偏移，而不是 fontSize
+		const lineY = startY + i * lineHeight + baselineOffset
+
 		// 如果有背景色，先绘制背景
 		if (options.backgroundColor) {
 			const originalFillStyle: string = ctx.fillStyle //保存文本颜色
 			ctx.fillStyle = options.backgroundColor
 
-			// 设置背景高度 - 使用文本实际高度或行高
-			const bgHeight = actualTextHeight + bgpaddingTop + bgPaddingBottom
-
-			// 计算背景矩形的位置和尺寸
+			// 设置背景高度 - 背景应该从文本顶部开始，延伸到文本底部
+			const bgHeight = actualTextHeight + bgPaddingTop + bgPaddingBottom
 			const bgX = lineX - bgPaddingLeft
-			// 垂直对齐背景，确保背景覆盖文本
-			const baselineY = startY + i * lineHeight + fontSize
-			// 将背景垂直定位到文本基线，并考虑文本的上下延伸
-			const bgY = baselineY - textAscent - bgpaddingTop
-
+			// 背景垂直位置，考虑文本是基于基线定位的
+			const bgY = lineY - textAscent - bgPaddingTop
 			const bgWidth = lineWidth + bgPaddingLeft + bgPaddingRight
 
 			// 绘制背景矩形
@@ -373,13 +377,13 @@ function drawText(
 
 		// 绘制当前行
 		if (letterSpacing === 0) {
-			// 没有字间距，直接绘制
-			ctx.fillText(line, lineX, startY + i * lineHeight + fontSize)
+			// 没有字间距，直接绘制，使用 lineY 作为基线位置
+			ctx.fillText(line, lineX, lineY)
 		} else {
 			// 有字间距，需要逐字绘制
 			let currentX = lineX
 			for (let j = 0; j < line.length; j++) {
-				ctx.fillText(line[j], currentX, startY + i * lineHeight + fontSize)
+				ctx.fillText(line[j], currentX, lineY) // 使用 lineY 作为基线位置
 				currentX += ctx.measureText(line[j]).width + letterSpacing
 			}
 		}
