@@ -92,14 +92,37 @@ export function measureTextWidth(
  * @returns {number} 文本实际高度信息
  */
 export function getTextMetrics(ctx: CanvasRenderingContext2D, fontSize: number) {
-	// 获取文本实际度量信息，用于计算背景高度
-	const textMetrics = ctx.measureText('M') // 使用字母M作为参考
-	// 计算基于文本的实际高度
-	// 使用 fontBoundingBoxAscent 和 fontBoundingBoxDescent 获取文本上/下半部高度
-	// fontBoundingBoxAscent可能不支持，则使用fontSize的0.7倍作为近似
-	const textAscent = textMetrics.fontBoundingBoxAscent || fontSize * 0.7
-	const textDescent = textMetrics.fontBoundingBoxDescent || fontSize * 0.3
-	const actualTextHeight = textAscent + textDescent
+	// 使用一个样本字符串，包含上下延伸字符，以获得更准确的高度
+	// 'Åy' 包含一个上延伸字符和一个下延伸字符
+	const textMetrics = ctx.measureText('Åy')
+
+	// 尝试使用标准 API 获取文本度量
+	let textAscent, textDescent, actualTextHeight
+
+	// 检查浏览器是否支持这些属性
+	if (
+		textMetrics.fontBoundingBoxAscent !== undefined &&
+		textMetrics.fontBoundingBoxDescent !== undefined
+	) {
+		// 优先使用字体边界框属性（更准确）
+		textAscent = textMetrics.fontBoundingBoxAscent
+		textDescent = textMetrics.fontBoundingBoxDescent
+		actualTextHeight = textAscent + textDescent
+	} else if (
+		textMetrics.actualBoundingBoxAscent !== undefined &&
+		textMetrics.actualBoundingBoxDescent !== undefined
+	) {
+		// 退而求其次使用实际边界框（针对当前文本）
+		textAscent = textMetrics.actualBoundingBoxAscent
+		textDescent = textMetrics.actualBoundingBoxDescent
+		actualTextHeight = textAscent + textDescent
+	} else {
+		// 如果都不支持，使用基于字体大小的估算
+		// 这是一个粗略的估计，实际上不同字体有不同的比例
+		textAscent = fontSize * 0.8
+		textDescent = fontSize * 0.2
+		actualTextHeight = fontSize
+	}
 
 	return {
 		textAscent,
