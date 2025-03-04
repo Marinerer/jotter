@@ -81,6 +81,14 @@ ctx.drawText('Your text here', 10, 10, 300, 200, {
 
 ### drawText(ctx, text, x, y, width, height, options)
 
+```js
+drawText(ctx, text, x, y, width, height, options)
+
+// or
+
+drawText(ctx, text, x, y, options)
+```
+
 Draws text on a canvas with advanced layout and styling options.
 
 #### Parameters
@@ -100,16 +108,16 @@ Draws text on a canvas with advanced layout and styling options.
 | Option              | Type             | Default     | Description                                                                           |
 | ------------------- | ---------------- | ----------- | ------------------------------------------------------------------------------------- |
 | `padding`           | `number\|array`  | `0`         | Inner padding. Can be a single number or `[top, right, bottom, left]`                 |
-| `textAlign`         | `string`         | `'left'`    | Horizontal alignment: 'left', 'center', 'right'                                       |
-| `verticalAlign`     | `string`         | `'top'`     | Vertical alignment: 'top', 'middle', 'bottom'                                         |
-| `font`              | `string\|object` | -           | Font settings. String format: '16px Arial' or object: `{size, family, weight, style}` |
+| `textAlign`         | `string`         | `'left'`    | Horizontal alignment: `'left', 'center', 'right'`                                       |
+| `verticalAlign`     | `string`         | `'top'`     | Vertical alignment: `'top', 'middle', 'bottom'`                                         |
+| `font`              | `string\|object` | -           | Font settings. String format: `'16px Arial'` or object: `{size, family, weight, style}` |
 | `color`             | `string`         | `'#000'`    | Text color                                                                            |
 | `backgroundColor`   | `string`         | -           | Text background color                                                                 |
 | `backgroundPadding` | `number\|array`  | `0`         | Padding around text for background.                                                   |
 | `lineHeight`        | `number`         | `1.2`       | Line height multiplier                                                                |
 | `letterSpacing`     | `number`         | `0`         | Spacing between characters                                                            |
 | `wrap`              | `boolean`        | `true`      | Whether to automatically wrap text                                                    |
-| `overflow`          | `string`         | `'visible'` | Overflow handling: 'visible', 'hidden'                                                |
+| `overflow`          | `string`         | `'visible'` | Overflow handling: `'visible', 'hidden'`                                                |
 | `textOverflow`      | `string`         | `''`        | Text to display when content is truncated, e.g., `'...'   `                           |
 
 #### Return Value
