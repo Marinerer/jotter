@@ -18,7 +18,7 @@ class MockContext {
 	measureText(text) {
 		// Mock text measurements - simplistic but sufficient for tests
 		// Return different widths for different characters to test letterSpacing
-		if (text === 'M') {
+		if (text === 'Åy') {
 			return {
 				width: 16,
 				fontBoundingBoxAscent: 12,
@@ -239,8 +239,8 @@ describe('drawText function', () => {
 		test('should handle top vertical alignment', () => {
 			const result = drawText(ctx, 'Hello', 10, 10, 100, 50, { verticalAlign: 'top' })
 
-			// Default is top, so y should be 10 + paddingTop + fontSize
-			expect(ctx._text[0].y).toBe(26) // 10 + 0 + 16
+			// Default is top, so y should be 10 + paddingTop + textAscent
+			expect(ctx._text[0].y).toBe(22) // 10 + 0 + 12
 		})
 
 		test('should handle middle vertical alignment', () => {
@@ -248,7 +248,7 @@ describe('drawText function', () => {
 
 			// Middle alignment should center text vertically
 			// Single line height is 19.2 (16 * 1.2), center in 50px height is (50 - 19.2)/2 = 15.4
-			expect(ctx._text[0].y).toBeCloseTo(26 + 15.4, 0)
+			expect(ctx._text[0].y).toBeCloseTo(22 + 15.4, 0)
 		})
 
 		test('should handle bottom vertical alignment', () => {
@@ -256,7 +256,7 @@ describe('drawText function', () => {
 
 			// Bottom alignment should align to bottom
 			// Single line height is 19.2 (16 * 1.2), bottom in 50px height would leave 50 - 19.2 = 30.8px from top
-			expect(ctx._text[0].y).toBeCloseTo(26 + 30.8, 0)
+			expect(ctx._text[0].y).toBeCloseTo(22 + 30.8, 0)
 		})
 
 		// Test line wrapping
@@ -446,7 +446,7 @@ describe('drawText function', () => {
 			drawText(ctx, 'Hello', 10, 10, 100, 50, { font: { size: 20 } })
 
 			// Metrics should be based on fontSize and lineHeight
-			expect(ctx._text[0].y).toBeCloseTo(10 + 20, 0) // y + fontSize
+			expect(ctx._text[0].y).toBeCloseTo(10 + 12, 0) // y + textAscent
 		})
 	})
 
