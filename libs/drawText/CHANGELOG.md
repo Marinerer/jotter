@@ -1,5 +1,12 @@
 # canvas-draw-text
 
+## 1.0.2
+
+### Patch Changes 🌟
+
+- fix: Fixed drawText test due to measurement improvements (#15) ([0c573c3](https://github.com/Marinerer/jotter/commit/0c573c35af0ca2d1b83812dd430924cecb5d5a4b))
+- perf: Refactor drawText for better baseline handling (#14) ([a4531a7](https://github.com/Marinerer/jotter/commit/a4531a7ed4f1cedc07a6966d6d47a1e31b6a860b))
+
 ## 1.0.1
 
 ### Patch Changes 🌟
