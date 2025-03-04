@@ -144,6 +144,8 @@ function drawText(
 	const { actualTextHeight, textAscent } = getTextMetrics(ctx, fontSize)
 	// 设置文本颜色
 	ctx.fillStyle = options.color!
+	// 指定文本对齐基线
+	ctx.textBaseline = 'alphabetic'
 	// 处理字间距
 	const letterSpacing = options.letterSpacing!
 	// 计算行高（像素）
