@@ -42,32 +42,16 @@ class CanvasScrollbar {
 		this._canvas = canvas
 		this._ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
-		const canvasWidth = canvas.width
-		const canvasHeight = canvas.height
-		const direction = options.direction !== 'x' ? 'y' : 'x'
-		const _opts = {
+		// 初始化配置项
+		const direction = options.direction !== 'x' ? 'y' : 'x' //方向只能是 x|y
+		const _opts: ScrollbarOptions = {
 			contentSize: 0,
 			onscroll: () => {},
 			...options,
 			direction,
 			style: { ...defaultStyle, ...(options.style || {}) },
 		}
-		if (typeof _opts.width !== 'number') {
-			_opts.width = _opts.direction === 'y' ? 10 : canvasWidth
-		}
-		if (typeof _opts.height !== 'number') {
-			_opts.height = _opts.direction === 'y' ? canvasHeight : 10
-		}
-		if (typeof _opts.x !== 'number') {
-			_opts.x = _opts.direction === 'y' ? canvasWidth - _opts.width : 0
-		}
-		if (typeof _opts.y !== 'number') {
-			_opts.y = _opts.direction === 'y' ? 0 : canvasHeight - _opts.height
-		}
-		if (typeof _opts.viewportSize !== 'number') {
-			_opts.viewportSize = _opts.direction === 'y' ? canvasHeight : canvasWidth
-		}
-		this._opts = _opts as DeepRequired<ScrollbarOptions>
+		this._opts = this._initOptions(_opts, canvas) as DeepRequired<ScrollbarOptions>
 
 		// 绑定事件处理函数
 		this._handleMouseDown = this._handleMouseDown.bind(this)
@@ -76,8 +60,7 @@ class CanvasScrollbar {
 		this._handleWheel = this._handleWheel.bind(this)
 
 		// 添加事件监听
-		this._canvas.addEventListener('mousedown', this._handleMouseDown)
-		this._canvas.addEventListener('wheel', this._handleWheel)
+		this._bindEvents()
 
 		// roundRect polyfill
 		if (typeof CanvasRenderingContext2D.prototype.roundRect !== 'function') {
@@ -115,6 +98,34 @@ class CanvasScrollbar {
 	private _isPointInScrollbar(x: number, y: number) {
 		const { x: scrollX, y: scrollY, width, height } = this._opts
 		return x >= scrollX && x <= scrollX + width && y >= scrollY && y <= scrollY + height
+	}
+
+	// 初始化选项
+	private _initOptions(_opts: ScrollbarOptions, canvas: HTMLCanvasElement) {
+		const canvasWidth = canvas.width
+		const canvasHeight = canvas.height
+		const { direction } = _opts
+		if (typeof _opts.width !== 'number') {
+			_opts.width = direction === 'y' ? 10 : canvasWidth
+		}
+		if (typeof _opts.height !== 'number') {
+			_opts.height = direction === 'y' ? canvasHeight : 10
+		}
+		if (typeof _opts.x !== 'number') {
+			_opts.x = direction === 'y' ? canvasWidth - _opts.width : 0
+		}
+		if (typeof _opts.y !== 'number') {
+			_opts.y = direction === 'y' ? 0 : canvasHeight - _opts.height
+		}
+		if (typeof _opts.viewportSize !== 'number') {
+			_opts.viewportSize = direction === 'y' ? canvasHeight : canvasWidth
+		}
+		return _opts
+	}
+
+	private _bindEvents() {
+		this._canvas.addEventListener('mousedown', this._handleMouseDown)
+		this._canvas.addEventListener('wheel', this._handleWheel)
 	}
 
 	// 处理鼠标按下事件
