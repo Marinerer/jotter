@@ -9,16 +9,16 @@ const defaultStyle = {
 }
 
 class CanvasScrollbar {
-	_canvas: HTMLCanvasElement // 画布元素
-	_ctx: CanvasRenderingContext2D // 画布上下文
-	_opts: DeepRequired<ScrollbarOptions> // 滚动条配置项，经过深度必需处理
+	private readonly _canvas: HTMLCanvasElement // 画布元素
+	private readonly _ctx: CanvasRenderingContext2D // 画布上下文
+	private readonly _opts: DeepRequired<ScrollbarOptions> // 滚动条配置项，经过深度必需处理
 
 	// 初始化状态
-	_scrollPosition: number = 0 // 当前滚动位置
-	_isDragging: boolean = false // 是否正在拖拽
-	_startDragY: number = 0 // 开始拖拽时的鼠标位置
-	_startDragX: number = 0 // 开始拖拽时的鼠标位置
-	_startScrollPosition: number = 0 // 开始拖拽时的滚动位置
+	private _scrollPosition: number = 0 // 当前滚动位置
+	private _isDragging: boolean = false // 是否正在拖拽
+	private _startDragY: number = 0 // 开始拖拽时的鼠标位置
+	private _startDragX: number = 0 // 开始拖拽时的鼠标位置
+	private _startScrollPosition: number = 0 // 开始拖拽时的滚动位置
 
 	/**
 	 * constructor
@@ -91,34 +91,34 @@ class CanvasScrollbar {
 	}
 
 	// 获取最大滚动距离
-	_getMaxScroll() {
+	private _getMaxScroll() {
 		return this._opts.contentSize - this._opts.viewportSize
 	}
 	// 获取滑块尺寸
-	_getThumbSize() {
+	private _getThumbSize() {
 		const { direction, width, height, contentSize, viewportSize } = this._opts
 		const scrollbarSize = direction === 'x' ? width : height
 		return Math.max(20, (viewportSize / contentSize) * scrollbarSize)
 	}
 
 	// 检查是否可以滚动
-	_checkShouldScroll() {
+	private _checkShouldScroll() {
 		return this._opts.contentSize > this._opts.viewportSize
 	}
 	// 检查是否在滚动边界 (delta: 滚动距离)
-	_isAtScrollBoundary(delta: number) {
+	private _isAtScrollBoundary(delta: number) {
 		const isAtStart = this._scrollPosition <= 0
 		const isAtEnd = this._scrollPosition >= this._getMaxScroll()
 		return (isAtStart && delta < 0) || (isAtEnd && delta > 0)
 	}
 	// 检查点是否在滚动条区域内
-	_isPointInScrollbar(x: number, y: number) {
+	private _isPointInScrollbar(x: number, y: number) {
 		const { x: scrollX, y: scrollY, width, height } = this._opts
 		return x >= scrollX && x <= scrollX + width && y >= scrollY && y <= scrollY + height
 	}
 
 	// 处理鼠标按下事件
-	_handleMouseDown(e: MouseEvent) {
+	private _handleMouseDown(e: MouseEvent) {
 		// 如果内容尺寸小于视口尺寸，禁用滚动
 		if (!this._checkShouldScroll()) return
 
@@ -155,7 +155,7 @@ class CanvasScrollbar {
 	}
 
 	// 处理鼠标移动事件
-	_handleMouseMove(e: MouseEvent) {
+	private _handleMouseMove(e: MouseEvent) {
 		// 如果内容尺寸小于视口尺寸，禁用滚动
 		if (!this._checkShouldScroll()) return
 
@@ -188,7 +188,7 @@ class CanvasScrollbar {
 	}
 
 	// 处理鼠标松开事件
-	_handleMouseUp(e: MouseEvent) {
+	private _handleMouseUp(e: MouseEvent) {
 		// 阻止事件冒泡
 		e.stopPropagation()
 
@@ -200,7 +200,7 @@ class CanvasScrollbar {
 	}
 
 	// 处理滚轮事件
-	_handleWheel(e: WheelEvent) {
+	private _handleWheel(e: WheelEvent) {
 		// 如果内容尺寸小于视口尺寸，禁用滚动
 		if (!this._checkShouldScroll()) return
 		// 阻止事件冒泡
