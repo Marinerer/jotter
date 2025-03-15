@@ -36,13 +36,13 @@ export function roundRect(
 	this.beginPath()
 	// 移动到起点位置
 	this.moveTo(x + radius[0], y)
-	// 绘制第一个角的圆弧
+	// 右上角圆弧
 	this.arcTo(x + width, y, x + width, y + radius[1], radius[1])
-	// 绘制第二个角的圆弧
+	// 右下角圆弧
 	this.arcTo(x + width, y + height, x + radius[2], y + height, radius[2])
-	// 绘制第三个角的圆弧
+	// 左下角圆弧
 	this.arcTo(x, y + height, x, y + radius[3], radius[3])
-	// 绘制第四个角的圆弧
+	// 左上角圆弧
 	this.arcTo(x, y, x + radius[0], y, radius[0])
 	// 关闭路径
 	this.closePath()

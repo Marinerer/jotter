@@ -1,0 +1,48 @@
+{
+	"name": "canvas-scrollbar",
+	"version": "0.0.1",
+	"description": "A lightweight, customizable scrollbar implementation for HTML Canvas elements. This library provides an efficient way to add scrolling capabilities to canvas-based applications.",
+	"type": "module",
+	"main": "dist/index.js",
+	"unpkg": "dist/index.min.js",
+	"jsdelivr": "dist/index.min.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"module": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./*": "./dist/*"
+	},
+	"files": [
+		"dist"
+	],
+	"buildOptions": {
+		"name": "CanvasScrollbar",
+		"target": [
+			"es2015",
+			"es5"
+		]
+	},
+	"keywords": [
+		"scrollbar",
+		"canvas",
+		"canvas scroll",
+		"canvas drag"
+	],
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org"
+	},
+	"sideEffects": false,
+	"homepage": "https://github.com/Marinerer/jotter/tree/main/libs/scrollbar",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Marinerer/jotter.git",
+		"directory": "libs/scrollbar"
+	},
+	"author": "Mariner <mengqing723@gmail.com>",
+	"license": "MIT"
+}
